@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import {
@@ -36,7 +36,7 @@ const options = [
   { id: "unemployed", label: "Unemployed / Seeking Work", desc: "Currently without formal employment.", icon: Search },
 ];
 
-export default function AssistantFlow() {
+function AssistantFlowInner() {
   const [selected, setSelected] = useState("farmer");
   const [digiLockerNotice, setDigiLockerNotice] = useState<string | null>(null);
   const searchParams = useSearchParams();
@@ -234,3 +234,12 @@ export default function AssistantFlow() {
     </div>
   );
 }
+
+export default function AssistantFlow() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-[#F3F4F6]">Loading...</div>}>
+      <AssistantFlowInner />
+    </Suspense>
+  );
+}
+

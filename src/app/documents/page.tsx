@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import {
@@ -250,7 +250,7 @@ function UploadModal({ onClose, onDigiLockerFetchComplete, digiLockerPending }: 
 
 /* ─────────────── PAGE ─────────────── */
 
-export default function DocumentStatus() {
+function DocumentStatusInner() {
   const searchParams = useSearchParams();
   const [documents, setDocuments] = useState<DocumentRecord[]>(INITIAL_DOCUMENTS);
   const [uploadModalOpen, setUploadModalOpen] = useState(false);
@@ -616,5 +616,13 @@ export default function DocumentStatus() {
         />
       )}
     </div>
+  );
+}
+
+export default function DocumentStatus() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-[#F3F4F6]">Loading...</div>}>
+      <DocumentStatusInner />
+    </Suspense>
   );
 }
