@@ -338,35 +338,42 @@ export default function LandingPage() {
       </section>
 
       {/* ── TESTIMONIAL ── */}
-      <section className="py-20 px-6" style={{ background: "#0A1628" }}>
+      <section className="py-20 px-6" style={{ background: "#1C2331" }}>
         <div className="max-w-5xl mx-auto flex flex-col md:flex-row gap-12 items-center">
-          <div className="flex-1">
-            <div className="inline-flex items-center gap-2 border border-white/15 bg-white/8 rounded-full px-4 py-1.5 text-[11px] font-semibold tracking-widest uppercase text-white/60 mb-8">
-              <CheckCircle2 className="w-3.5 h-3.5 text-green-400" />
-              Verification Firsthand
-            </div>
-            <blockquote className="text-[1.15rem] font-normal text-white/80 leading-relaxed mb-8" style={{ fontStyle: "italic" }}>
-              "We were struggling to verify our eligibility for post-matric scholarships for my daughter. Entitle showed us the exact certificate required. No middlemen, no bribes, straight and simple."
-            </blockquote>
-            <div className="flex items-center gap-4">
-              <div className="w-11 h-11 rounded-full flex items-center justify-center font-bold text-white" style={{ background: "#E8620A" }}>
-                DK
+          
+          {/* Left Side: Testimonial Card */}
+          <div className="flex-1 bg-[#0F172A] border border-[#1E293B] rounded-xl p-8 md:p-10 shadow-2xl">
+            <div className="flex items-center gap-4 mb-8">
+              {/* Custom Orange Icon matching reference */}
+              <div className="flex flex-col justify-center items-start gap-[4px] shrink-0">
+                <div className="w-6 h-[2px] bg-[#E8620A]" />
+                <div className="w-4 h-[2px] bg-[#E8620A]" />
+                <div className="w-6 h-[2px] bg-[#E8620A]" />
               </div>
               <div>
-                <div className="font-semibold text-white text-sm">Devendra Kulkarni</div>
-                <div className="text-[12px] text-white/45">Parent &amp; Farmer · Wardha, Maharashtra</div>
+                <div className="text-[11px] font-bold text-white tracking-widest uppercase mb-0.5">VERIFIED CITIZEN FEEDBACK</div>
+                <div className="text-[12.5px] text-[#64748B]">Maharashtra • Post-matric scholarship</div>
               </div>
+            </div>
+            
+            <blockquote className="text-[1.35rem] font-normal text-white/90 leading-[1.6] mb-8 italic" style={{ letterSpacing: "-0.01em" }}>
+              "We were struggling to verify our eligibility for post-matric scholarships for my daughter. Entitle showed us the exact certificate required. No middlemen, no bribes, straight and simple."
+            </blockquote>
+            
+            <div>
+              <div className="font-bold text-white text-base mb-1">Devendra Kulkarni</div>
+              <div className="text-[13px] text-[#64748B]">Parent & Farmer · Wardha, Maharashtra</div>
             </div>
           </div>
 
-          {/* Photo placeholder */}
-          <div className="w-full md:w-72 h-56 rounded-sm overflow-hidden border border-white/10 relative shrink-0" style={{ background: "#0D2150" }}>
-            <div className="absolute inset-0 flex items-center justify-center text-white/20">
-              <div className="text-center">
-                <Globe className="w-14 h-14 mx-auto mb-2" strokeWidth={1} />
-                <p className="text-xs">Citizen Story · Wardha</p>
-              </div>
-            </div>
+          {/* Right Side: Photo */}
+          <div className="w-full md:w-[420px] rounded-xl overflow-hidden shrink-0 shadow-2xl">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img 
+              src="/villager.png" 
+              alt="Testimonial from Devendra Kulkarni" 
+              className="w-full h-auto object-cover aspect-[4/3]"
+            />
           </div>
         </div>
       </section>
