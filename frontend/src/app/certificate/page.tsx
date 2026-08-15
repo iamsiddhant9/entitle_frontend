@@ -90,7 +90,7 @@ export default function CertificateScreen() {
             {[
               ["Overview", "/"], 
               ["My determination", "/dashboard"], 
-              ["Schemes directory", "#"], 
+              ["Schemes directory", "/schemes"], 
               ["Documents", "/documents"]
             ].map(([n, h]) => (
               <Link key={n} href={h} className="relative px-4 py-4 text-sm font-medium transition-colors text-[#475569] hover:text-[#0B3CC8]">
