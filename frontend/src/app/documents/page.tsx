@@ -112,9 +112,9 @@ export default function DocumentStatus() {
             {[
               ["Overview", "/", false], 
               ["My determination", "/dashboard", false], 
-              ["Schemes directory", "#", false], 
+              ["Schemes directory", "/schemes", false], 
               ["Documents", "/documents", true],
-              ["Help", "#", false]
+              ["Help", "/help", false]
             ].map(([n, h, active]) => (
               <Link
                 key={n as string}

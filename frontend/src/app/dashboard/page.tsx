@@ -110,9 +110,9 @@ function StatusBadge({ status, label }: { status: string; label: string }) {
 const navItems = [
   { label: "Overview", href: "/" },
   { label: "My determination", href: "/dashboard", active: true },
-  { label: "Schemes directory", href: "#" },
+  { label: "Schemes directory", href: "/schemes" },
   { label: "Documents", href: "/documents" },
-  { label: "Help", href: "#" },
+  { label: "Help", href: "/help" },
 ];
 
 /* ─────────────── PAGE ─────────────── */
