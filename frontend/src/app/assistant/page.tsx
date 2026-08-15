@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import {
   User,
@@ -37,6 +38,20 @@ const options = [
 
 export default function AssistantFlow() {
   const [selected, setSelected] = useState("farmer");
+  const [digiLockerNotice, setDigiLockerNotice] = useState<string | null>(null);
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    if (searchParams.get("digilocker") === "success") {
+      // Clean URL without reload
+      window.history.replaceState({}, "", window.location.pathname);
+      setDigiLockerNotice(
+        "DigiLocker connected. Your documents are being imported — check the Documents page."
+      );
+      setTimeout(() => setDigiLockerNotice(null), 7000);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div
@@ -144,6 +159,18 @@ export default function AssistantFlow() {
             <div className="h-[3px] w-full" style={{ background: "#0B3CC8" }} />
             
             <div className="p-8 md:p-10">
+
+              {/* DigiLocker notice */}
+              {digiLockerNotice && (
+                <div className="flex items-center gap-3 mb-6 px-4 py-3 rounded-sm border text-[12.5px] font-medium text-[#065F46] bg-[#ECFDF5] border-[#A7F3D0]">
+                  <CheckCircle2 className="w-4 h-4 shrink-0" />
+                  <span className="flex-1">{digiLockerNotice}</span>
+                  <button onClick={() => setDigiLockerNotice(null)} className="opacity-60 hover:opacity-100 transition-opacity">
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+              )}
+
               <div className="mb-10">
                 <div className="text-[11px] font-semibold tracking-widest uppercase mb-3" style={{ color: "#0B3CC8" }}>Section 2 of 5</div>
                 <h2 className="text-2xl font-bold text-[#0F172A] mb-2">What is your current occupation?</h2>

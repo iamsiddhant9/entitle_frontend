@@ -1,16 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import IndiaImpactMap from "./components/IndiaImpactMap";
 import {
   ArrowRight,
   CheckCircle2,
-  AlertTriangle,
   ShieldCheck,
   FileText,
-  Download,
   Lock,
-  Globe,
   Plus,
   Minus,
   Phone,
@@ -175,6 +173,64 @@ function SiteHeader({ ctaLabel = "Check Eligibility", ctaHref = "/assistant" }) 
   );
 }
 
+const typewriterPhrases = [
+  "Know Your Rights.\nClaim Your Benefits.",
+  "अपने अधिकार जानें।\nअपने लाभ प्राप्त करें।",
+  "तुमचे हक्क जाणून घ्या.\nतुमचे फायदे मिळवा.",
+  "ਆਪਣੇ ਅਧਿਕਾਰ ਜਾਣੋ।\nਆਪਣੇ ਲਾਭ ਪ੍ਰਾਪਤ ਕਰੋ।",
+  "మీ హక్కులను తెలుసుకోండి.\nమీ ప్రయోజనాలను పొందండి.",
+  "Know Your Rights.\nClaim Your Benefits."
+];
+
+function HeroTypewriter() {
+  const [displayText, setDisplayText] = useState("");
+  const [phraseIndex, setPhraseIndex] = useState(0);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  useEffect(() => {
+    let typingSpeed = 45;
+    if (isDeleting) typingSpeed = 20;
+
+    const currentPhrase = typewriterPhrases[phraseIndex];
+    
+    if (!isDeleting && displayText === currentPhrase) {
+      if (phraseIndex === typewriterPhrases.length - 1) {
+        return;
+      }
+      const timeout = setTimeout(() => setIsDeleting(true), 800);
+      return () => clearTimeout(timeout);
+    }
+
+    if (isDeleting && displayText === "") {
+      setIsDeleting(false);
+      setPhraseIndex((prev) => prev + 1);
+      return;
+    }
+
+    const timeout = setTimeout(() => {
+      setDisplayText((prev) => 
+        isDeleting
+          ? currentPhrase.substring(0, prev.length - 1)
+          : currentPhrase.substring(0, prev.length + 1)
+      );
+    }, typingSpeed);
+
+    return () => clearTimeout(timeout);
+  }, [displayText, isDeleting, phraseIndex]);
+
+  return (
+    <>
+      {displayText.split('\n').map((line, i, arr) => (
+        <span key={i}>
+          {line}
+          {i === 0 && displayText.includes('\n') && <br />}
+        </span>
+      ))}
+      <span className="inline-block w-[4px] bg-white ml-2 animate-pulse" style={{ height: "0.75em", verticalAlign: "middle", opacity: phraseIndex === typewriterPhrases.length - 1 && displayText === typewriterPhrases[phraseIndex] ? 0 : 1 }}></span>
+    </>
+  );
+}
+
 /* ─── PAGE ─── */
 export default function LandingPage() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
@@ -188,13 +244,17 @@ export default function LandingPage() {
 
         <div className="relative max-w-4xl mx-auto text-center text-white">
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 border border-white/20 bg-white/10 backdrop-blur-sm rounded-full px-4 py-1.5 text-[12px] font-semibold tracking-widest uppercase text-white/80 mb-8">
-            <span className="w-2 h-2 rounded-full bg-[#FF9933]" style={{ animation: "pulse 2s infinite" }} />
-            Trusted Eligibility Gateway
+          <div className="inline-flex items-center gap-3 mb-8" style={{ borderLeft: "3px solid #FF9933", paddingLeft: "12px" }}>
+            <ShieldCheck className="w-4 h-4 shrink-0" style={{ color: "#FF9933" }} />
+            <div className="flex items-center gap-2 text-[11px] font-bold tracking-[0.14em] uppercase" style={{ color: "rgba(255,255,255,0.6)" }}>
+              <span>Independent Welfare Platform</span>
+              <span style={{ color: "rgba(255,255,255,0.2)" }}>·</span>
+              <span style={{ color: "rgba(255,255,255,0.35)" }}>106 Schemes Tracked</span>
+            </div>
           </div>
 
-          <h1 className="text-[3rem] md:text-[4rem] font-bold leading-[1.08] mb-5 text-white" style={{ letterSpacing: "-0.035em" }}>
-            Know Your Rights.<br />Claim Your Benefits.
+          <h1 className="text-[3rem] md:text-[4rem] font-bold leading-[1.08] mb-5 text-white min-h-[140px] md:min-h-[160px]" style={{ letterSpacing: "-0.035em", fontFamily: "var(--font-open-sans), sans-serif" }}>
+            <HeroTypewriter />
           </h1>
 
           <p className="text-[1.05rem] text-white/65 mb-10 max-w-xl mx-auto leading-relaxed font-normal">
@@ -214,50 +274,42 @@ export default function LandingPage() {
             </a>
           </div>
 
-          {/* Social proof */}
+          {/* Ministry logo circles */}
           <div className="flex items-center justify-center gap-3 text-white/50 text-[13px]">
             <div className="flex -space-x-2">
-              {["#E8620A", "#0B3CC8", "#16A34A", "#7C3AED", "#0891B2"].map((c, i) => (
-                <div key={i} className="w-8 h-8 rounded-full border-2 border-[#0D2150] flex items-center justify-center text-[10px] font-bold text-white" style={{ background: c, zIndex: 5 - i }}>
-                  {["KD", "SR", "MP", "AP", "RK"][i]}
+              {[
+                { abbr: "MoA", bg: "rgba(255,153,51,0.12)",  border: "rgba(255,153,51,0.35)",  text: "#FFBD6B", title: "Ministry of Agriculture & Farmers Welfare" },
+                { abbr: "MoH", bg: "rgba(96,165,250,0.12)",  border: "rgba(96,165,250,0.35)",  text: "#93C5FD", title: "Ministry of Health & Family Welfare" },
+                { abbr: "MoE", bg: "rgba(167,139,250,0.12)", border: "rgba(167,139,250,0.35)", text: "#C4B5FD", title: "Ministry of Education" },
+                { abbr: "MRD", bg: "rgba(74,222,128,0.10)",  border: "rgba(74,222,128,0.30)",  text: "#86EFAC", title: "Ministry of Rural Development" },
+                { abbr: "MoL", bg: "rgba(34,211,238,0.10)",  border: "rgba(34,211,238,0.30)",  text: "#67E8F9", title: "Ministry of Labour & Employment" },
+              ].map(({ abbr, bg, border, text, title }, i) => (
+                <div
+                  key={i}
+                  title={title}
+                  className="w-9 h-9 rounded-full flex items-center justify-center font-bold"
+                  style={{
+                    background: bg,
+                    border: `1.5px solid ${border}`,
+                    color: text,
+                    zIndex: 5 - i,
+                    fontSize: "8px",
+                    letterSpacing: "0.03em",
+                    marginLeft: i === 0 ? 0 : "-8px",
+                  }}
+                >
+                  {abbr}
                 </div>
               ))}
             </div>
-            <span>Over <strong className="text-white">43,000+</strong> citizens verified their benefit this week.</span>
+            <span><strong className="text-white">106 central schemes</strong> across <strong className="text-white">18 ministries</strong> — mapped and searchable.</span>
           </div>
         </div>
       </section>
 
-      {/* ── HOW IT WORKS ── */}
-      <section className="bg-white py-20 px-6">
-        <div className="max-w-5xl mx-auto">
-          <p className="text-[11px] font-semibold tracking-widest uppercase text-center mb-4" style={{ color: "#E8620A" }}>
-            The Three-Step Process
-          </p>
-          <h2 className="text-[1.9rem] font-bold text-[#0F172A] text-center mb-12" style={{ letterSpacing: "-0.025em" }}>
-            How Entitle Secures Your Claims
-          </h2>
 
-          <div className="grid md:grid-cols-3 gap-6">
-            {[
-              { n: "01", icon: FileText, title: "Answer Quick Questions", body: "No interview needed. Enter simple details about your household, income and location." },
-              { n: "02", icon: CheckCircle2, title: "Instant Scheme Match", body: "Our rule engine deterministically matches your profile against 106 published scheme criteria." },
-              { n: "03", icon: Download, title: "Download Verified Certificate", body: "Receive a timestamped, blockchain-anchored certificate you can share with any government authority." },
-            ].map(({ n, icon: Icon, title, body }) => (
-              <div key={n} className="border border-[#E2E8F0] rounded-sm p-7 bg-white hover:border-[#0B3CC8]/40 hover:shadow-md transition-all duration-200">
-                <div className="flex items-start gap-4 mb-4">
-                  <span className="text-2xl font-bold" style={{ color: "#E8620A", letterSpacing: "-0.03em" }}>{n}</span>
-                  <div className="w-9 h-9 rounded flex items-center justify-center mt-0.5" style={{ background: "#EEF3FF" }}>
-                    <Icon className="w-5 h-5" style={{ color: "#0B3CC8" }} />
-                  </div>
-                </div>
-                <h3 className="font-bold text-[#0F172A] mb-2">{title}</h3>
-                <p className="text-[13px] text-[#64748B] leading-relaxed">{body}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <IndiaImpactMap />
+
 
       {/* ── SCHEMES DIRECTORY ── */}
       <section id="schemes" className="py-20 px-6" style={{ background: "#F3F4F6" }}>
@@ -313,70 +365,96 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── TRUST PILLARS ── */}
-      <section className="bg-white py-20 px-6">
+      {/* ── PRINCIPLES ── */}
+      <section style={{ background: "#0A1628" }} className="py-20 px-6">
         <div className="max-w-5xl mx-auto">
-          <p className="text-[11px] font-semibold tracking-widest uppercase text-center mb-4" style={{ color: "#E8620A" }}>
-            Core Principles
-          </p>
-          <h2 className="text-[1.9rem] font-bold text-[#0F172A] text-center mb-12" style={{ letterSpacing: "-0.025em" }}>
-            Designed for Transparency and Trust
-          </h2>
 
-          <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-5">
-            {trustPillars.map(({ icon: Icon, title, body }) => (
-              <div key={title} className="border border-[#E2E8F0] rounded-sm p-6 hover:border-[#0B3CC8]/30 hover:shadow-sm transition-all">
-                <div className="w-10 h-10 rounded flex items-center justify-center mb-4" style={{ background: "#EEF3FF" }}>
-                  <Icon className="w-5 h-5" style={{ color: "#0B3CC8" }} />
+          {/* Header */}
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-16">
+            <div>
+              <p className="text-[11px] font-semibold tracking-widest uppercase mb-3" style={{ color: "#FF9933" }}>
+                Platform Commitments
+              </p>
+              <h2 className="text-[1.9rem] font-bold text-white" style={{ letterSpacing: "-0.025em" }}>
+                Four Unbreakable Guarantees
+              </h2>
+            </div>
+            <p className="text-[13px] max-w-xs" style={{ color: "rgba(255,255,255,0.35)" }}>
+              Every principle is enforced in code,<br className="hidden md:block" /> not just promised in text.
+            </p>
+          </div>
+
+          {/* Principle rows */}
+          <div>
+            {[
+              {
+                n: "01", title: "Deterministic Matching",
+                body: "No algorithm opinions or scores. Each eligibility decision is computed directly against published scheme rules — fully auditable.",
+                proof: "106 schemes · hard-coded eligibility rules",
+              },
+              {
+                n: "02", title: "Public Ledger Proof",
+                body: "Your assessment is hashed and anchored on a public blockchain. Immutable, timestamped, and independently verifiable by anyone.",
+                proof: "Every certificate carries an on-chain hash",
+              },
+              {
+                n: "03", title: "Plain Language Explanations",
+                body: "We translate complex legal eligibility rules and administrative jargon into plain language that any citizen can understand.",
+                proof: "No legal jargon · No fine print",
+              },
+              {
+                n: "04", title: "Privacy First Infrastructure",
+                body: "Your documents never leave your device. We process only cryptographic summaries using a zero-knowledge architecture.",
+                proof: "Zero server uploads · Zero data retention",
+              },
+            ].map(({ n, title, body, proof }) => (
+              <div
+                key={n}
+                className="group grid grid-cols-[40px_1fr] md:grid-cols-[72px_1fr_auto] gap-4 md:gap-6 py-7 md:py-9 items-start cursor-default"
+                style={{ borderTop: "1px solid rgba(255,255,255,0.07)" }}
+              >
+                {/* Number */}
+                <div
+                  className="font-semibold group-hover:text-white/25 transition-colors duration-300"
+                  style={{ fontFamily: "var(--font-oswald), sans-serif", fontSize: "clamp(1.5rem, 3vw, 2.2rem)", color: "rgba(255,255,255,0.09)", lineHeight: 1 }}
+                >
+                  {n}
                 </div>
-                <h3 className="font-bold text-[#0F172A] text-sm mb-2">{title}</h3>
-                <p className="text-[12px] text-[#64748B] leading-relaxed">{body}</p>
+
+                {/* Content */}
+                <div>
+                  <h3
+                    className="font-bold text-[14px] md:text-[15px] mb-2 transition-colors duration-200"
+                    style={{ color: "rgba(255,255,255,0.75)" }}
+                  >
+                    {title}
+                  </h3>
+                  <p className="text-[12px] md:text-[13px] leading-relaxed" style={{ color: "rgba(255,255,255,0.35)" }}>
+                    {body}
+                  </p>
+                  {/* Mobile proof — inline under body */}
+                  <p className="mt-2 text-[10px] font-mono md:hidden" style={{ color: "rgba(255,153,51,0.6)" }}>
+                    — {proof}
+                  </p>
+                </div>
+
+                {/* Desktop hover proof — sharp editorial tag, not a pill */}
+                <div className="shrink-0 hidden md:flex items-start pt-0.5">
+                  <span
+                    className="text-[10px] font-mono whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all duration-300 py-1 pl-2.5 pr-3"
+                    style={{ color: "rgba(255,153,51,0.8)", borderLeft: "2px solid rgba(255,153,51,0.45)" }}
+                  >
+                    {proof}
+                  </span>
+                </div>
               </div>
             ))}
+            <div style={{ borderTop: "1px solid rgba(255,255,255,0.07)" }} />
           </div>
         </div>
       </section>
 
-      {/* ── TESTIMONIAL ── */}
-      <section className="py-20 px-6" style={{ background: "#1C2331" }}>
-        <div className="max-w-5xl mx-auto flex flex-col md:flex-row gap-12 items-center">
-          
-          {/* Left Side: Testimonial Card */}
-          <div className="flex-1 bg-[#0F172A] border border-[#1E293B] rounded-xl p-8 md:p-10 shadow-2xl">
-            <div className="flex items-center gap-4 mb-8">
-              {/* Custom Orange Icon matching reference */}
-              <div className="flex flex-col justify-center items-start gap-[4px] shrink-0">
-                <div className="w-6 h-[2px] bg-[#E8620A]" />
-                <div className="w-4 h-[2px] bg-[#E8620A]" />
-                <div className="w-6 h-[2px] bg-[#E8620A]" />
-              </div>
-              <div>
-                <div className="text-[11px] font-bold text-white tracking-widest uppercase mb-0.5">VERIFIED CITIZEN FEEDBACK</div>
-                <div className="text-[12.5px] text-[#64748B]">Maharashtra • Post-matric scholarship</div>
-              </div>
-            </div>
-            
-            <blockquote className="text-[1.35rem] font-normal text-white/90 leading-[1.6] mb-8 italic" style={{ letterSpacing: "-0.01em" }}>
-              "We were struggling to verify our eligibility for post-matric scholarships for my daughter. Entitle showed us the exact certificate required. No middlemen, no bribes, straight and simple."
-            </blockquote>
-            
-            <div>
-              <div className="font-bold text-white text-base mb-1">Devendra Kulkarni</div>
-              <div className="text-[13px] text-[#64748B]">Parent & Farmer · Wardha, Maharashtra</div>
-            </div>
-          </div>
 
-          {/* Right Side: Photo */}
-          <div className="w-full md:w-[420px] rounded-xl overflow-hidden shrink-0 shadow-2xl">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img 
-              src="/villager.png" 
-              alt="Testimonial from Devendra Kulkarni" 
-              className="w-full h-auto object-cover aspect-[4/3]"
-            />
-          </div>
-        </div>
-      </section>
 
       {/* ── FAQ ── */}
       <section id="faq" className="py-20 px-6 bg-white">

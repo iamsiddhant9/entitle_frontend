@@ -1,10 +1,16 @@
 import type { Metadata } from "next";
-import { Open_Sans } from "next/font/google";
+import { Open_Sans, Oswald } from "next/font/google";
 import "./globals.css";
 
 const openSans = Open_Sans({
   subsets: ["latin"],
   variable: "--font-open-sans",
+});
+
+const oswald = Oswald({
+  subsets: ["latin"],
+  weight: ["500", "600", "700"],
+  variable: "--font-oswald",
 });
 
 export const metadata: Metadata = {
@@ -19,7 +25,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>
-      <body className={`${openSans.variable} min-h-full flex flex-col bg-white antialiased`}>{children}</body>
+      <body className={`${openSans.variable} ${oswald.variable} min-h-full flex flex-col bg-white antialiased`}>{children}</body>
     </html>
   );
 }
